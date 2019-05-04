@@ -10,22 +10,39 @@ public class WeaponRig : MonoBehaviour
 
 	public bool reloading { get; private set; }  = false;
 
-	private void Update()
+	public Weapon current;
+
+	float recoilTimer = 0;
+
+	private void Update ()
 	{
 		if (Input.GetKeyDown(KeyCode.R))
 			Reload();
+
+		recoilTimer = Mathf.Clamp01(recoilTimer - Time.deltaTime);
+		transform.localPosition = Vector3.back * recoilTimer;
 	}
 
 	public void Reload ()
 	{
-		StartCoroutine(ReloadSequence());
+		bool canReload = true;
+
+		switch (current.type)
+		{
+			case Weapon.Type.Shotgun:
+				canReload = Player.local.shotgunAmmo > 0 && current.ammo < 8;
+			break;
+		}
+
+		if (!reloading && canReload)
+			StartCoroutine(ReloadSequence());
 	}
 
 	IEnumerator ReloadSequence ()
 	{
 		reloading = true;
 
-		float reloadDuration = 1;
+		float reloadDuration = 0.5f;
 		float reloadTimer = 0;
 		while (reloadTimer < reloadDuration)
 		{
@@ -35,6 +52,34 @@ public class WeaponRig : MonoBehaviour
 			yield return 0;
 		}
 
+		switch (current.type)
+		{
+			case Weapon.Type.Shotgun:
+				int want = Mathf.Min(8 - current.ammo, Player.local.shotgunAmmo);
+				Player.local.shotgunAmmo -= want;
+				current.ammo += want;
+			break;
+		}
+
 		reloading = false;
+	}
+
+	public void Recoil (float amount)
+	{
+		recoilTimer = amount;
+		Player.local.KickCamera(0.01f);
+	}
+
+	IEnumerator RecoilSequence ()
+	{
+		float reloadDuration = 1;
+		float reloadTimer = 0;
+		while (reloadTimer < reloadDuration)
+		{
+			reloadTimer += Time.deltaTime;
+			transform.localEulerAngles = Vector3.right * m_ReloadCurve.Evaluate(Mathf.Clamp01(reloadTimer / reloadDuration)) * 45;
+
+			yield return 0;
+		}
 	}
 }

@@ -8,14 +8,21 @@ public class Player : MonoBehaviour
 	public static Player local;
 
 	// Inspector
-	public float	movementSpeed		= 10f;
-	public float	acceleration		= 10f;
-	public float	decceleration		= 10f;
-	public float	mouseSensitivity	= 3f;
+	public float		movementSpeed		= 10f;
+	public float		acceleration		= 10f;
+	public float		decceleration		= 10f;
+	public float		mouseSensitivity	= 3f;
+	public Light		headLight;
+	public WeaponRig	weaponRig;
+	public Transform	head;
+	public int			shotgunAmmo			= 32;
 
 	[Header("UI")]
-	public Image	healthImage;
-	public Text		healthText;
+	public Image		crosshair;
+	public Image		healthImage;
+	public Text			healthText;
+	public Text			ammoText;
+	public Text			magText;
 
 	Rigidbody _rigidbody;
 	public new Rigidbody rigidbody
@@ -65,6 +72,7 @@ public class Player : MonoBehaviour
 	Vector3 input		= Vector3.zero;
 	float	cameraPitch	= 0;
 	float	cameraYaw	= 0;
+	Quaternion headLightRotation;
 
     void Start ()
     {
@@ -77,13 +85,24 @@ public class Player : MonoBehaviour
 			local = this;
 
 		killable.OnDeath += Killable_OnDeath;
+		killable.OnDamage += Killable_OnDamage;
 		killable.OnHealthChanged += Killable_OnHealthChanged;
+
+		headLightRotation = camera.transform.rotation;
     }
+
+	private void Killable_OnDamage (float damage)
+	{
+		PoolManager.GetPooledObject("Effects", "BloodSplat", transform.position + Vector3.up * 1.5f);
+		KickCamera();
+	}
 
 	private void Killable_OnDeath (object sender)
 	{
 		controller.height = 0;
 		controller.center = Vector3.up * 1.3f;
+		weaponRig.gameObject.SetActive(false);
+		crosshair.enabled = false;
 	}
 
 	private void Killable_OnHealthChanged(object sender)
@@ -103,6 +122,7 @@ public class Player : MonoBehaviour
 		UpdateCamera();
         UpdateInput();
 		UpdateMovement();
+		UpdateUI();
     }
 
 	void UpdateInput ()
@@ -121,7 +141,29 @@ public class Player : MonoBehaviour
 		cameraPitch = Mathf.Clamp(cameraPitch, -89, 89);
 		cameraYaw += Input.GetAxis("Mouse X") * mouseSensitivity;
 
-		camera.transform.rotation = Quaternion.Euler(cameraPitch, cameraYaw, killable.isAlive ? 0 : -90);	
+		head.rotation = Quaternion.Euler(cameraPitch, cameraYaw, killable.isAlive ? 0 : -90);
+
+		headLightRotation = Quaternion.Lerp(headLightRotation, Quaternion.LookRotation(head.forward, Vector3.up), Time.deltaTime * 8);
+		headLight.transform.rotation = headLightRotation;
+
+		camera.transform.localRotation = Quaternion.Lerp(camera.transform.localRotation, Quaternion.identity, Time.deltaTime * 8);
+	}
+
+	void UpdateUI ()
+	{
+		switch (weaponRig.current.type)
+		{
+			case Weapon.Type.Shotgun:
+				ammoText.text = shotgunAmmo.ToString();
+			break;
+		}
+
+		magText.text = weaponRig.current.ammo.ToString();
+	}
+
+	public void KickCamera (float amount = 0.1f)
+	{
+		camera.transform.localRotation = Quaternion.Lerp(Quaternion.identity, Random.rotation, amount);
 	}
 
 	void UpdateMovement ()
