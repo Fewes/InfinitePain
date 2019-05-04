@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
 	public WeaponRig	weaponRig;
 	public Transform	head;
 	public int			shotgunAmmo			= 32;
+	public Animator		foot;
 
 	[Header("UI")]
 	public Image		crosshair;
@@ -23,6 +24,8 @@ public class Player : MonoBehaviour
 	public Text			healthText;
 	public Text			ammoText;
 	public Text			magText;
+
+	public bool			isKicking { get; private set; } = false;
 
 	Rigidbody _rigidbody;
 	public new Rigidbody rigidbody
@@ -89,6 +92,7 @@ public class Player : MonoBehaviour
 		killable.OnHealthChanged += Killable_OnHealthChanged;
 
 		headLightRotation = camera.transform.rotation;
+		foot.gameObject.SetActive(false);
     }
 
 	private void Killable_OnDamage (float damage)
@@ -123,7 +127,27 @@ public class Player : MonoBehaviour
         UpdateInput();
 		UpdateMovement();
 		UpdateUI();
+
+		if (Input.GetKeyDown(KeyCode.F))
+			Kick();
     }
+
+	void Kick ()
+	{
+		if (!isKicking)
+			StartCoroutine(KickSequence());
+	}
+
+	IEnumerator KickSequence ()
+	{
+		isKicking = true;
+		KickCamera(0.025f);
+		foot.gameObject.SetActive(true);
+		foot.SetTrigger("Kick");
+		yield return new WaitForSeconds(0.4f);
+		foot.gameObject.SetActive(false);
+		isKicking = false;
+	}
 
 	void UpdateInput ()
 	{
