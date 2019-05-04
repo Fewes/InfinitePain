@@ -37,13 +37,16 @@ public class Muzzle : MonoBehaviour
 		for (int i = 0; i < numCollisionEvents; i++)
 		{
 			Vector3 pos		= events[i].intersection;
-            Vector3 force	= events[i].velocity * bulletForce;
-			if (rb)
-				rb.AddForceAtPosition(force, pos);
+            Vector3 force	= events[i].velocity.normalized * bulletForce;
 			if (killable)
 			{
 				killable.Damage(bulletDamage);
 				PoolManager.GetPooledObject("Effects", "BloodSplatSmall", pos);
+			}
+			if (rb)
+			{
+				rb.velocity += force;
+				//rb.AddForceAtPosition(force, pos);
 			}
 		}
     }

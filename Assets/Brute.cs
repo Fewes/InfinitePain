@@ -21,13 +21,13 @@ public class Enemy : MonoBehaviour
 
 	private void Killable_OnDamage (float damage)
 	{
-		animator.SetTrigger("Hurt");
+		
 	}
 
 	protected void Update ()
 	{
-		if (alert)
-			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Player.local.transform.position - transform.position, Vector3.up), Time.deltaTime * 3);
+		//if (alert)
+		//	transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Player.local.transform.position - transform.position, Vector3.up), Time.deltaTime * 3);
 	}
 }
 
@@ -35,6 +35,7 @@ public class Brute : Enemy
 {
 	float running = 0;
 	NavMeshAgent navigator;
+	CapsuleCollider collider;
 
     // Start is called before the first frame update
     new void Start ()
@@ -42,14 +43,39 @@ public class Brute : Enemy
         base.Start();
 
 		killable.OnDeath += Killable_OnDeath;
+		killable.OnDamage += Killable_OnDamage;
 
 		navigator = GetComponent<NavMeshAgent>();
+		collider = GetComponent<CapsuleCollider>();
     }
+
+	private void Killable_OnDamage (float damage)
+	{
+		if (killable.isAlive && navigator.enabled)
+		{
+			StartCoroutine(DisableNavigator(1f));
+			animator.SetTrigger("Hurt");
+		}
+		rigidbody.velocity += Vector3.up * 0.1f;
+	}
+
+	IEnumerator DisableNavigator (float duration)
+	{
+		navigator.enabled = false;
+		yield return new WaitForSeconds(duration);
+		if (killable.isAlive)
+			navigator.enabled = true;
+	}
 
 	private void Killable_OnDeath(object sender)
 	{
 		navigator.enabled = false;
 		animator.SetTrigger("Death");
+		gameObject.layer = LayerMask.NameToLayer("Debris");
+		collider.radius = 0.2f;
+		collider.height = 0.2f;
+		collider.center = Vector3.up * 0.2f;
+
 	}
 
 	// Update is called once per frame
@@ -57,8 +83,13 @@ public class Brute : Enemy
     {
         base.Update();
 
-		if (alert)
+		if (alert && killable.isAlive && navigator.enabled)
 		{
+			if (!navigator.isOnNavMesh)
+			{
+				Destroy(gameObject);
+				return;
+			}
 			navigator.destination = Player.local.transform.position;
 		}
 
