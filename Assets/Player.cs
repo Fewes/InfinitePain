@@ -8,14 +8,17 @@ public class Player : MonoBehaviour
 	public static Player local;
 
 	// Inspector
-	public float	movementSpeed		= 10f;
-	public float	acceleration		= 10f;
-	public float	decceleration		= 10f;
-	public float	mouseSensitivity	= 3f;
+	public float		movementSpeed		= 10f;
+	public float		acceleration		= 10f;
+	public float		decceleration		= 10f;
+	public float		mouseSensitivity	= 3f;
+	public Light		headLight;
+	public GameObject	weaponRig;
 
 	[Header("UI")]
-	public Image	healthImage;
-	public Text		healthText;
+	public Image		crosshair;
+	public Image		healthImage;
+	public Text			healthText;
 
 	Rigidbody _rigidbody;
 	public new Rigidbody rigidbody
@@ -65,6 +68,7 @@ public class Player : MonoBehaviour
 	Vector3 input		= Vector3.zero;
 	float	cameraPitch	= 0;
 	float	cameraYaw	= 0;
+	Quaternion headLightRotation;
 
     void Start ()
     {
@@ -78,12 +82,16 @@ public class Player : MonoBehaviour
 
 		killable.OnDeath += Killable_OnDeath;
 		killable.OnHealthChanged += Killable_OnHealthChanged;
+
+		headLightRotation = camera.transform.rotation;
     }
 
 	private void Killable_OnDeath (object sender)
 	{
 		controller.height = 0;
 		controller.center = Vector3.up * 1.3f;
+		weaponRig.SetActive(false);
+		crosshair.enabled = false;
 	}
 
 	private void Killable_OnHealthChanged(object sender)
@@ -121,7 +129,10 @@ public class Player : MonoBehaviour
 		cameraPitch = Mathf.Clamp(cameraPitch, -89, 89);
 		cameraYaw += Input.GetAxis("Mouse X") * mouseSensitivity;
 
-		camera.transform.rotation = Quaternion.Euler(cameraPitch, cameraYaw, killable.isAlive ? 0 : -90);	
+		camera.transform.rotation = Quaternion.Euler(cameraPitch, cameraYaw, killable.isAlive ? 0 : -90);
+
+		headLightRotation = Quaternion.Lerp(headLightRotation, Quaternion.LookRotation(camera.transform.forward, Vector3.up), Time.deltaTime * 8);
+		headLight.transform.rotation = headLightRotation;
 	}
 
 	void UpdateMovement ()

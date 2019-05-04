@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-	ParticleSystem m_Muzzle;
+	// Inspector
+	public float	recoilAmount = 1f;
+
+	WeaponRig		m_WeaponRig;
+	ParticleSystem	m_Muzzle;
 
     // Start is called before the first frame update
     void Start ()
     {
+        m_WeaponRig = GetComponentInParent<WeaponRig>();
         m_Muzzle = transform.Find("Muzzle").GetComponent<ParticleSystem>();
     }
 
@@ -24,5 +29,6 @@ public class Weapon : MonoBehaviour
 	public void Fire ()
 	{
 		m_Muzzle.Play();
+		m_WeaponRig.Recoil(recoilAmount);
 	}
 }
