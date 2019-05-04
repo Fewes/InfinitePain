@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class DamageTrigger : MonoBehaviour
 {
-	public float damage = 10;
-	public bool  kill	= false;
+	public float damage			= 10;
+	public bool  killPlayer		= false;
+	public bool  killEnemies	= false;
 
 	private void OnTriggerEnter (Collider other)
 	{
 		var killable = other.GetComponentInChildren<Killable>();
 
-		if (kill)
+		bool isPlayer = killable == Player.local.killable;
+
+		if ((isPlayer && killPlayer) || (!isPlayer && killEnemies))
 			killable.Kill();
 		else
 			killable.Damage(damage);

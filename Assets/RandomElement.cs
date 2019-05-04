@@ -12,7 +12,8 @@ public class RandomElement : MonoBehaviour
 		int element = Random.Range(0, m_Scenarios.Length);
 		for (int i = 0; i < m_Scenarios.Length; i++)
 		{
-			m_Scenarios[i].SetActive(i == element);
+			if (m_Scenarios[i])
+				m_Scenarios[i].SetActive(i == element);
 		}
 	}
 }

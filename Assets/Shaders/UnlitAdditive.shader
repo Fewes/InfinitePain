@@ -10,6 +10,7 @@ Shader "Unlit/Additive"
 		Tags { "RenderType"="Transparent" "Queue"="Transparent" }
 		LOD 100
 		Blend One One
+		ZWrite Off
 
 		Pass
 		{
@@ -54,7 +55,7 @@ Shader "Unlit/Additive"
 
 				fixed4 albedo = tex2D(_MainTex, i.texcoord);
 
-				fixed4 color = albedo * i.color *_Color;
+				fixed4 color = albedo * i.color * _Color;
 				
 				return color;
 			}
