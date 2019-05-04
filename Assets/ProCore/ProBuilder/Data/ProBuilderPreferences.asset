@@ -12,15 +12,39 @@ MonoBehaviour:
   m_Script: {fileID: 146836576, guid: 0472bdc8d6d15384d98f22ee34302f9c, type: 3}
   m_Name: ProBuilderPreferences
   m_EditorClassIdentifier: 
-  m_Bool_keys: []
-  m_Int_keys: []
-  m_Float_keys: []
-  m_String_keys: []
+  m_Bool_keys:
+  - pbEnableBackfaceSelection
+  - pbStripProBuilderOnBuild
+  - pbDisableAutoUV2Generation
+  - pbForceConvex
+  - pbMeshesAreAssets
+  - pbGenerateUV2PerObject
+  m_Int_keys:
+  - pbDefaultEditLevel
+  - pbDefaultSelectionMode
+  - pb_GIWorkflowMode
+  - pbHandleAlignment
+  - pbExtrudeMethod
+  - pbDefaultEntity
+  - pbDefaultCollider
+  - pbShadowCastingMode
+  m_Float_keys:
+  - pbEditorScroll.x
+  - pbEditorScroll.y
+  - pbExtrudeDistance
+  m_String_keys:
+  - pbCurrentMaterialPalette
   m_Color_keys: []
-  m_Material_keys: []
-  m_Bool_values: 
-  m_Int_values: 
-  m_Float_values: []
-  m_String_values: []
+  m_Material_keys:
+  - pbDefaultMaterial
+  m_Bool_values: 010100000000
+  m_Int_values: 0100000002000000010000000000000001000000000000000200000002000000
+  m_Float_values:
+  - 0
+  - 0
+  - 0
+  m_String_values:
+  - Assets/ProCore/ProBuilder/Data/Default Material Palette.asset
   m_Color_values: []
-  m_Material_values: []
+  m_Material_values:
+  - {fileID: 2100000, guid: abf6b58d4a0f73b43bcb6e31a16cea7c, type: 2}
