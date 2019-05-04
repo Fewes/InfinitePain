@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 1678226838}
   - component: {fileID: 1678226837}
   - component: {fileID: 1678226836}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1686,7 +1686,7 @@ GameObject:
   - component: {fileID: 6564901994408315920}
   - component: {fileID: 6564901994408315921}
   - component: {fileID: 6564901994408315927}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Room2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

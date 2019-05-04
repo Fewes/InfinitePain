@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class RoomManager : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class RoomManager : MonoBehaviour
 		newRoom.transform.position += posDiff;
 		next = newRoom;
 		next.OnPlayerEntered += Progress;
+		GetComponent<NavMeshSurface>().BuildNavMesh();
 	}
 
 	void Progress ()

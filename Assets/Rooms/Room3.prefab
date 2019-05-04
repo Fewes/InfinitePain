@@ -273,7 +273,7 @@ GameObject:
   - component: {fileID: 4495190690268756579}
   - component: {fileID: 4495190690268756578}
   - component: {fileID: 4495190690268756580}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Room3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7363,7 +7363,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 0
-  kill: 1
+  killPlayer: 0
+  killEnemies: 0
 --- !u!1 &5565108150833738669
 GameObject:
   m_ObjectHideFlags: 0

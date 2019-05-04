@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Room : MonoBehaviour
 {
@@ -26,6 +27,16 @@ public class Room : MonoBehaviour
 			if (!_exitPoint)
 				_exitPoint = transform.Find("Exit");
 			return _exitPoint;
+		}
+	}
+	NavMeshSurface _navMesh;
+	public NavMeshSurface navMesh
+	{
+		get
+		{
+			if (!_navMesh)
+				_navMesh = GetComponent<NavMeshSurface>();
+			return _navMesh;
 		}
 	}
 
