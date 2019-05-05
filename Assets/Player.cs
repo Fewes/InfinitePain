@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
 	public Transform	head;
 	public int			shotgunAmmo			= 32;
 	public Animator		foot;
+	public LayerMask	kickLayers;
+	public float		kickForce			= 5;
 
 	[Header("UI")]
 	public Image		crosshair;
@@ -144,7 +146,24 @@ public class Player : MonoBehaviour
 		KickCamera(0.025f);
 		foot.gameObject.SetActive(true);
 		foot.SetTrigger("Kick");
-		yield return new WaitForSeconds(0.4f);
+		yield return new WaitForSeconds(0.1f);
+
+		Ray ray = camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+		// Move ray origin back one meter
+		ray.origin -= ray.direction;
+        var hits = Physics.SphereCastAll(ray, 0.5f, 3f, kickLayers);
+		foreach (var hit in hits)
+		{
+            // Hit something
+			var enemy = hit.transform.GetComponentInChildren<Enemy>();
+			if (enemy)
+				enemy.Flinch();
+			var rb = hit.transform.GetComponentInChildren<Rigidbody>();
+			if (rb)
+				rb.velocity += ray.direction * kickForce;
+        }
+
+		yield return new WaitForSeconds(0.3f);
 		foot.gameObject.SetActive(false);
 		isKicking = false;
 	}
