@@ -42,7 +42,7 @@ public class WeaponRig : MonoBehaviour
 	{
 		reloading = true;
 
-		float reloadDuration = 0.5f;
+		float reloadDuration = 1f;
 		float reloadTimer = 0;
 		while (reloadTimer < reloadDuration)
 		{
@@ -72,12 +72,12 @@ public class WeaponRig : MonoBehaviour
 
 	IEnumerator RecoilSequence ()
 	{
-		float reloadDuration = 1;
-		float reloadTimer = 0;
-		while (reloadTimer < reloadDuration)
+		float recoilDuration = 1;
+		float recoilTimer = 0;
+		while (recoilTimer < recoilDuration)
 		{
-			reloadTimer += Time.deltaTime;
-			transform.localEulerAngles = Vector3.right * m_ReloadCurve.Evaluate(Mathf.Clamp01(reloadTimer / reloadDuration)) * 45;
+			recoilTimer += Time.deltaTime;
+			transform.localEulerAngles = Vector3.right * m_ReloadCurve.Evaluate(Mathf.Clamp01(recoilTimer / recoilDuration)) * 45;
 
 			yield return 0;
 		}

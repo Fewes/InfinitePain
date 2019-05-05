@@ -17,6 +17,7 @@ public class Weapon : MonoBehaviour
 	[Header("Audio")]
 	public string		fireAudio;
 	public string		shellAudio;
+	public string		cycleAudio;
 
 	WeaponRig			m_WeaponRig;
 	ParticleSystem		m_Muzzle;
@@ -61,14 +62,18 @@ public class Weapon : MonoBehaviour
 	{
 		isCycling = true;
 
-		AudioManager.PlaySoundEffect("ShotgunPump", transform.position);
+		yield return new WaitForSeconds(0.3f);
+
+		if (cycleAudio != "")
+			AudioManager.PlaySoundEffect(cycleAudio, transform.position);
 
 		float timer = 0;
 		// Pump back
 		while (timer < 0.25f)
 		{
 			timer = Mathf.Min(timer + Time.deltaTime, 0.25f);
-			pump.localPosition = pumpStartPos - Vector3.forward * timer;
+			pump.localPosition = pumpStartPos - pump.parent.InverseTransformDirection(pump.forward) * timer;
+			transform.localEulerAngles = Vector3.up * (-90 - timer * 40f); 
 			yield return 0;
 		}
 
@@ -82,7 +87,8 @@ public class Weapon : MonoBehaviour
 		while (timer > 0f)
 		{
 			timer = Mathf.Max(timer - Time.deltaTime, 0f);
-			pump.localPosition = pumpStartPos - Vector3.forward * timer;
+			pump.localPosition = pumpStartPos - pump.parent.InverseTransformDirection(pump.forward) * timer;
+			transform.localEulerAngles = Vector3.up * (-90 - timer * 40f); 
 			yield return 0;
 		}
 		
