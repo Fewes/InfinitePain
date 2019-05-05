@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
 	public LayerMask	kickLayers;
 	public float		kickForce			= 5;
 	public Feet			feet;
+	public Material		flash;
 
 	[Header("UI")]
 	public Image		crosshair;
@@ -82,15 +83,39 @@ public class Player : MonoBehaviour
 	float	cameraYaw	= 0;
 	Quaternion headLightRotation;
 
-    void Start ()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
-
+	private void Awake()
+	{
 		if (local && local != this)
 			Debug.LogError("Multiple local players detected");
 		else
 			local = this;
+	}
+
+	public static void Flash (float duration, Color color)
+	{
+		local.mFlash(duration, color);
+	}
+
+	void mFlash (float duration, Color color)
+	{
+		StartCoroutine(FlashSequence(duration, color));
+	}
+
+	IEnumerator FlashSequence (float duration, Color color)
+	{
+		float timer = duration;
+		while (timer > 0)
+		{
+			timer -= Time.deltaTime;
+			flash.SetColor("_Color", color * (Mathf.Max(timer, 0) / duration));
+			yield return 0;
+		}
+	}
+
+	void Start ()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+		Cursor.visible = false;
 
 		killable.OnDeath += Killable_OnDeath;
 		killable.OnDamage += Killable_OnDamage;
@@ -108,6 +133,7 @@ public class Player : MonoBehaviour
 		KickCamera();
 		if (killable.isAlive)
 			AudioManager.PlaySoundEffect("PlayerHurt", transform.position);
+		Flash(1f, Color.red * 0.3f);
 	}
 
 	private void Killable_OnDeath (object sender)
@@ -219,6 +245,34 @@ public class Player : MonoBehaviour
 	public void KickCamera (float amount = 0.1f)
 	{
 		camera.transform.localRotation = Quaternion.Lerp(Quaternion.identity, Random.rotation, amount);
+	}
+
+	public static bool RefillHealth (float amount)
+	{
+		var newHealth = Mathf.Min(local.killable.health + amount, local.killable.maxHealth);
+		if (newHealth != local.killable.health)
+		{
+			local.killable.SetHealth(newHealth);
+			AudioManager.PlaySoundEffect("PickupHealth", local.transform.position);
+			Flash(1f, Color.green * 0.3f);
+			return true;
+		}
+		else
+			return false;
+	}
+
+	public static bool RefillAmmo (int amount)
+	{
+		var newAmmo = Mathf.Min(local.shotgunAmmo + amount, 32);
+		if (newAmmo != local.shotgunAmmo)
+		{
+			local.shotgunAmmo = newAmmo;
+			AudioManager.PlaySoundEffect("PickupAmmo", local.transform.position);
+			Flash(1f, Color.yellow * 0.3f);
+			return true;
+		}
+		else
+			return false;
 	}
 
 	Vector3 velocity;

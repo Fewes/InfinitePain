@@ -73,6 +73,8 @@ public class Killable : MonoBehaviour
 
 	public void SetHealth (float h)
 	{
+		currentHealth = h;
+
 		if (isAlive)
 		{
 			if (h < Mathf.Epsilon)
@@ -83,7 +85,6 @@ public class Killable : MonoBehaviour
 		}
 		else
 		{
-			currentHealth = h;
 			if (h > Mathf.Epsilon)
 			{
 				isDestroyed = false;

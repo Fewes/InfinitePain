@@ -45,6 +45,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   odds: 0.25
   brute: 1
+  health: 1
+  ammo: 1
 --- !u!1 &1277468987273551622
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,6 +92,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   odds: 0.25
   brute: 1
+  health: 1
+  ammo: 1
 --- !u!1 &1519743932047803220
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,6 +139,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   odds: 0.25
   brute: 1
+  health: 1
+  ammo: 1
 --- !u!1 &1722420256043234364
 GameObject:
   m_ObjectHideFlags: 0
@@ -5251,6 +5257,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   odds: 0.25
   brute: 1
+  health: 1
+  ammo: 1
 --- !u!1 &5357728016539251058
 GameObject:
   m_ObjectHideFlags: 0
@@ -5356,6 +5364,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   odds: 0.25
   brute: 1
+  health: 1
+  ammo: 1
 --- !u!1 &6272795329731967474
 GameObject:
   m_ObjectHideFlags: 0
@@ -8392,6 +8402,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   odds: 0.25
   brute: 1
+  health: 1
+  ammo: 1
 --- !u!1 &7856823788529495591
 GameObject:
   m_ObjectHideFlags: 0

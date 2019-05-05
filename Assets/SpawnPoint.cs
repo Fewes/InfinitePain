@@ -8,6 +8,8 @@ public class SpawnPoint : MonoBehaviour
 	public float odds = 0.5f;
 
 	public bool brute;
+	public bool health;
+	public bool ammo;
 
     void OnEnable ()
     {
@@ -25,7 +27,16 @@ public class SpawnPoint : MonoBehaviour
 		yield return 0;
 		var pool = new List<GameObject>();
         if (brute)
+		{
 			pool.Add(SpawnManager.brute);
+			pool.Add(SpawnManager.brute);
+			pool.Add(SpawnManager.brute);
+			pool.Add(SpawnManager.brute);
+		}
+		 if (health)
+			pool.Add(SpawnManager.health);
+		  if (ammo)
+			pool.Add(SpawnManager.ammo);
 
 		Instantiate(pool[Random.Range(0, pool.Count)], transform.position, transform.rotation);
 	}

@@ -99,7 +99,7 @@ public class Brute : Enemy
 	private void Killable_OnDeath(object sender)
 	{
 		navigator.enabled = false;
-		animator.SetTrigger("Death");
+		animator.SetBool("Dead", true);
 		gameObject.layer = LayerMask.NameToLayer("Debris");
 		collider.radius = 0.2f;
 		collider.height = 0.2f;
@@ -147,15 +147,18 @@ public class Brute : Enemy
 		animator.SetTrigger("Attack");
 		yield return new WaitForSeconds(0.4f);
 
-		// Do damage
-		if (Vector3.Distance(Player.local.transform.position, transform.position) <= navigator.stoppingDistance + 0.5f)
+		if (killable.isAlive)
 		{
-			Player.local.killable.Damage(15);
-			AudioManager.PlaySoundEffect("AxeHit", transform.position + Vector3.up * 1.5f);
-		}
-		else
-		{
-			AudioManager.PlaySoundEffect("AxeMiss", transform.position + Vector3.up * 1.5f);
+			// Do damage
+			if (Vector3.Distance(Player.local.transform.position, transform.position) <= navigator.stoppingDistance + 0.5f)
+			{
+				Player.local.killable.Damage(15);
+				AudioManager.PlaySoundEffect("AxeHit", transform.position + Vector3.up * 1.5f);
+			}
+			else
+			{
+				AudioManager.PlaySoundEffect("AxeMiss", transform.position + Vector3.up * 1.5f);
+			}
 		}
 
 		yield return new WaitForSeconds(0.3f);

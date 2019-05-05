@@ -276,7 +276,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   footstepVolume: 1
   footstepDistance: 2
-  fallDamageThreshold: 10
+  fallDamageThreshold: 5
   fallDamage: 10
 --- !u!1001 &4295648438272746023
 PrefabInstance:
