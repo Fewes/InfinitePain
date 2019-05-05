@@ -160,6 +160,10 @@ MonoBehaviour:
   head: {fileID: 351390262}
   shotgunAmmo: 32
   foot: {fileID: 158993724}
+  kickLayers:
+    serializedVersion: 2
+    m_Bits: 6145
+  kickForce: 25
   crosshair: {fileID: 1920384908}
   healthImage: {fileID: 1399307263}
   healthText: {fileID: 679133887}
@@ -16124,6 +16128,12 @@ MonoBehaviour:
       allowSteal: 1
     - name: BloodSplatSmall
       pooledObject: {fileID: 8403867731924570127, guid: 1bb423f584527914f80f7eaaa89bf26b,
+        type: 3}
+      poolSize: 10
+      allowExpand: 0
+      allowSteal: 1
+    - name: BruteExplosion
+      pooledObject: {fileID: 6019582595651005213, guid: c13fefae5f474d54d8acb9ca114e815b,
         type: 3}
       poolSize: 10
       allowExpand: 0

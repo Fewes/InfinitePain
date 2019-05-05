@@ -10,13 +10,20 @@ public class Weapon : MonoBehaviour
 	}
 
 	// Inspector
-	public Type		type			= Type.Shotgun;
-	public float	recoilAmount	= 1f;
-	public int		ammo			= 8;
+	public Type			type			= Type.Shotgun;
+	public float		recoilAmount	= 1f;
+	public int			ammo			= 8;
+	public Transform	pump;
+	[Header("Audio")]
+	public string		fireAudio;
+	public string		shellAudio;
 
-	WeaponRig		m_WeaponRig;
-	ParticleSystem	m_Muzzle;
-	ParticleSystem	m_Shell;
+	WeaponRig			m_WeaponRig;
+	ParticleSystem		m_Muzzle;
+	ParticleSystem		m_Shell;
+
+	Vector3				pumpStartPos;
+	bool				isCycling;
 
     // Start is called before the first frame update
     void Start ()
@@ -24,6 +31,7 @@ public class Weapon : MonoBehaviour
         m_WeaponRig = GetComponentInParent<WeaponRig>();
         m_Muzzle = transform.Find("Muzzle").GetComponent<ParticleSystem>();
         m_Shell = transform.Find("Shell").GetComponent<ParticleSystem>();
+		pumpStartPos = pump.localPosition;
     }
 
     // Update is called once per frame
@@ -37,9 +45,54 @@ public class Weapon : MonoBehaviour
 
 	public void Fire ()
 	{
+		if (isCycling)
+			return;
+
 		m_Muzzle.Play();
-		m_Shell.Play();
 		m_WeaponRig.Recoil(recoilAmount);
+		if (fireAudio != "")
+			AudioManager.PlaySoundEffect(fireAudio, m_Muzzle.transform.position);
+
+		if (ammo > 0)
+			StartCoroutine(Cycle());
+	}
+
+	IEnumerator Cycle ()
+	{
+		isCycling = true;
+
+		AudioManager.PlaySoundEffect("ShotgunPump", transform.position);
+
+		float timer = 0;
+		// Pump back
+		while (timer < 0.25f)
+		{
+			timer = Mathf.Min(timer + Time.deltaTime, 0.25f);
+			pump.localPosition = pumpStartPos - Vector3.forward * timer;
+			yield return 0;
+		}
+
 		ammo--;
+
+		m_Shell.Play();
+		if (shellAudio != "")
+			StartCoroutine(ShellAudio());
+
+		// Pump forward
+		while (timer > 0f)
+		{
+			timer = Mathf.Max(timer - Time.deltaTime, 0f);
+			pump.localPosition = pumpStartPos - Vector3.forward * timer;
+			yield return 0;
+		}
+		
+		isCycling = false;
+	}
+
+	IEnumerator ShellAudio ()
+	{
+		var pos = Player.local.transform.position;
+		yield return new WaitForSeconds(0.5f);
+		AudioManager.PlaySoundEffect(shellAudio, pos);
 	}
 }

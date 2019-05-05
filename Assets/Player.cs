@@ -136,7 +136,7 @@ public class Player : MonoBehaviour
 
 	void Kick ()
 	{
-		if (!isKicking)
+		if (!isKicking && killable.isAlive)
 			StartCoroutine(KickSequence());
 	}
 

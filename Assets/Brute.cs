@@ -31,6 +31,7 @@ public abstract class Enemy : MonoBehaviour
 	}
 
 	public abstract void Flinch ();
+	public abstract void Explode ();
 }
 
 public class Brute : Enemy
@@ -69,6 +70,12 @@ public class Brute : Enemy
 			animator.SetTrigger("Hurt");
 		}
 		rigidbody.velocity += Vector3.up * 0.2f;
+	}
+
+	public override void Explode ()
+	{
+		PoolManager.GetPooledObject("Effects", "BruteExplosion", transform.position + Vector3.up * 1.5f);
+		Destroy(gameObject);
 	}
 
 	IEnumerator DisableNavigator (float duration)
@@ -123,13 +130,20 @@ public class Brute : Enemy
 		navigator.enabled = false;
 		isAttacking = true;
 		animator.SetTrigger("Attack");
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(0.4f);
 
 		// Do damage
-		if (Vector3.Distance(Player.local.transform.position, transform.position) <= navigator.stoppingDistance)
+		if (Vector3.Distance(Player.local.transform.position, transform.position) <= navigator.stoppingDistance + 0.5f)
+		{
 			Player.local.killable.Damage(15);
+			AudioManager.PlaySoundEffect("AxeHit", transform.position + Vector3.up * 1.5f);
+		}
+		else
+		{
+			AudioManager.PlaySoundEffect("AxeMiss", transform.position + Vector3.up * 1.5f);
+		}
 
-		yield return new WaitForSeconds(0.2f);
+		yield return new WaitForSeconds(0.3f);
 		navigator.enabled = killable.isAlive;
 		isAttacking = false;
 	}
