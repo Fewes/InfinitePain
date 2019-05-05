@@ -259,6 +259,7 @@ MonoBehaviour:
     m_Bits: 6145
   kickForce: 25
   feet: {fileID: 0}
+  flash: {fileID: 0}
   crosshair: {fileID: 1920384908}
   healthImage: {fileID: 1399307263}
   healthText: {fileID: 679133887}
@@ -1063,7 +1064,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1057804
+  m_Name: pb_Mesh-41626
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -11375,6 +11376,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Brute: {fileID: 4295648437486604028, guid: 0d40b514b4a1a964592604a8f8427d9b, type: 3}
+  m_Health: {fileID: 0}
+  m_Ammo: {fileID: 0}
 --- !u!4 &1150427962
 Transform:
   m_ObjectHideFlags: 0
@@ -16668,7 +16671,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-609408
+  m_Name: pb_Mesh-41714
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -16831,7 +16834,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1057762
+  m_Name: pb_Mesh-41590
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

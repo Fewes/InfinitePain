@@ -10,7 +10,6 @@ public class ScoreScreen : MonoBehaviour
 
     void Player_OnDeath(object sender)
     {
-        Debug.Log("Dead");
         restart.SetActive(true);
     }
 

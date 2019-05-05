@@ -24,6 +24,7 @@ public class RestartScreen : MonoBehaviour
 
         if (Input.GetKey(KeyCode.KeypadEnter) || Input.GetKey(KeyCode.Return))
         {
+            Player.score = 0;
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
