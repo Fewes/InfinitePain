@@ -53,7 +53,7 @@ public class Brute : Enemy
 	{
 		if (killable.isAlive && navigator.enabled)
 		{
-			StartCoroutine(DisableNavigator(1f));
+			StartCoroutine(DisableNavigator(0.5f));
 			animator.SetTrigger("Hurt");
 		}
 		rigidbody.velocity += Vector3.up * 0.1f;
