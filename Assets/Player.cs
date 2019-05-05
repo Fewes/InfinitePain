@@ -162,6 +162,10 @@ public class Player : MonoBehaviour
 			if (rb)
 				rb.velocity += ray.direction * kickForce;
         }
+		if (hits.Length > 0)
+			AudioManager.PlaySoundEffect("KickHit", ray.origin + ray.direction * 2);
+		else
+			AudioManager.PlaySoundEffect("KickMiss", ray.origin + ray.direction * 2);
 
 		yield return new WaitForSeconds(0.3f);
 		foot.gameObject.SetActive(false);

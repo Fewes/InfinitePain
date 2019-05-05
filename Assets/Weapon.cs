@@ -18,6 +18,7 @@ public class Weapon : MonoBehaviour
 	public string		fireAudio;
 	public string		shellAudio;
 	public string		cycleAudio;
+	public string		reloadAudio;
 
 	WeaponRig			m_WeaponRig;
 	ParticleSystem		m_Muzzle;
@@ -55,14 +56,19 @@ public class Weapon : MonoBehaviour
 			AudioManager.PlaySoundEffect(fireAudio, m_Muzzle.transform.position);
 
 		if (ammo > 0)
-			StartCoroutine(Cycle());
+			Cycle();
 	}
 
-	IEnumerator Cycle ()
+	public void Cycle (float delay = 0.3f)
+	{
+		StartCoroutine(CycleSequence(delay));
+	}
+
+	IEnumerator CycleSequence (float delay = 0.3f)
 	{
 		isCycling = true;
 
-		yield return new WaitForSeconds(0.3f);
+		yield return new WaitForSeconds(delay);
 
 		if (cycleAudio != "")
 			AudioManager.PlaySoundEffect(cycleAudio, transform.position);

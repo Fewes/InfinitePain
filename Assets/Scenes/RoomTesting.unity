@@ -351,19 +351,33 @@ MonoBehaviour:
   m_Effects:
   - name: AxeHit
     clips:
-    - {fileID: 0}
+    - {fileID: 8300000, guid: 641f53d3a3997454882d967119340fa1, type: 3}
+    - {fileID: 8300000, guid: d4b4e2cd24789ec4f83582cf664a4b0c, type: 3}
+    - {fileID: 8300000, guid: 16e25791909867b4688ef99e050c574b, type: 3}
+    - {fileID: 8300000, guid: ce8a63293bf95144b80c1f6ea8d64792, type: 3}
   - name: AxeMiss
     clips:
-    - {fileID: 0}
+    - {fileID: 8300000, guid: 7ee9a2c760dc9644b84f59105baef795, type: 3}
   - name: ShotgunFire
     clips:
-    - {fileID: 0}
+    - {fileID: 8300000, guid: b9c9056f771ee3f41a8b2e14a338a29f, type: 3}
   - name: ShotgunPump
     clips:
-    - {fileID: 0}
+    - {fileID: 8300000, guid: 6de05741c5629af4787b3e537087bced, type: 3}
   - name: ShotgunShell
     clips:
-    - {fileID: 0}
+    - {fileID: 8300000, guid: 08a94729eb70da544b981215604a6fe6, type: 3}
+  - name: ShotgunReload
+    clips:
+    - {fileID: 8300000, guid: d5095751c41a5894cb754bc6ef90b5a3, type: 3}
+  - name: Footstep
+    clips:
+    - {fileID: 8300000, guid: 9656e3cbcfc24804191bd8561e426500, type: 3}
+    - {fileID: 8300000, guid: 154adc7a2f847874ebc6e5fcdb278934, type: 3}
+    - {fileID: 8300000, guid: 633cd05cf30dc7e4a9b10512dbbdbfe0, type: 3}
+    - {fileID: 8300000, guid: 60b07a7095e8d1e4b9b85f2bdca3c61d, type: 3}
+    - {fileID: 8300000, guid: 08fbe8eb0e3364845b0f232cdb1225b5, type: 3}
+    - {fileID: 8300000, guid: b3d2aadf5eb8b6d41a174d6d042c0220, type: 3}
 --- !u!4 &252682219
 Transform:
   m_ObjectHideFlags: 0
@@ -6257,6 +6271,133 @@ PrefabInstance:
       objectReference: {fileID: 608710229}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c2f2d2056fb27649bc95f21ac4ffb7e, type: 3}
+--- !u!1 &1010914849
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1010914851}
+  - component: {fileID: 1010914850}
+  m_Layer: 0
+  m_Name: Music
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &1010914850
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010914849}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 5d9d65b5ad6eac24aa9029b2867e201c, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.7
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &1010914851
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010914849}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.266684, y: 1.7395723, z: -3.415116}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1060619549
 GameObject:
   m_ObjectHideFlags: 0
@@ -17365,6 +17506,7 @@ MonoBehaviour:
   recoilAmount: 0.4
   ammo: 8
   pump: {fileID: 3442734457006531148}
-  fireAudio: 
-  shellAudio: 
-  cycleAudio: 
+  fireAudio: ShotgunFire
+  shellAudio: ShotgunShell
+  cycleAudio: ShotgunPump
+  reloadAudio: ShotgunReload

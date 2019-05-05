@@ -42,6 +42,9 @@ public class WeaponRig : MonoBehaviour
 	{
 		reloading = true;
 
+		if (current.reloadAudio != "")
+			AudioManager.PlaySoundEffect(current.reloadAudio, transform.position);
+
 		float reloadDuration = 1f;
 		float reloadTimer = 0;
 		while (reloadTimer < reloadDuration)
@@ -62,6 +65,8 @@ public class WeaponRig : MonoBehaviour
 		}
 
 		reloading = false;
+
+		current.Cycle(0);
 	}
 
 	public void Recoil (float amount)

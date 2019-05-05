@@ -39,8 +39,11 @@ public class Brute : Enemy
 	float running = 0;
 	NavMeshAgent navigator;
 	CapsuleCollider collider;
+	Feet feet;
 
 	public bool isAttacking { get; private set; }
+
+	bool navigatorDisabled = false;
 
     // Start is called before the first frame update
     new void Start ()
@@ -52,8 +55,10 @@ public class Brute : Enemy
 
 		navigator = GetComponent<NavMeshAgent>();
 		collider = GetComponent<CapsuleCollider>();
+		feet = GetComponent<Feet>();
 
 		isAttacking = false;
+		navigatorDisabled = false;
     }
 
 	private void Killable_OnDamage (float damage)
@@ -62,7 +67,7 @@ public class Brute : Enemy
 		PoolManager.GetPooledObject("Effects", "BloodSplat", transform.position + Vector3.up * 1.5f);
 	}
 
-	public override void Flinch()
+	public override void Flinch ()
 	{
 		if (killable.isAlive)
 		{
@@ -80,10 +85,9 @@ public class Brute : Enemy
 
 	IEnumerator DisableNavigator (float duration)
 	{
-		navigator.enabled = false;
+		navigatorDisabled = true;
 		yield return new WaitForSeconds(duration);
-		if (killable.isAlive)
-			navigator.enabled = true;
+		navigatorDisabled = false;
 	}
 
 	private void Killable_OnDeath(object sender)
@@ -122,12 +126,13 @@ public class Brute : Enemy
 			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Player.local.transform.position - transform.position, Vector3.up), Time.deltaTime * 2);
 		}
 
+		navigator.enabled = !navigatorDisabled && killable.isAlive && !isAttacking && feet.grounded;
+
 		animator.SetFloat("Run", Mathf.Clamp01(navigator.velocity.magnitude));
     }
 
 	IEnumerator AttackSequence ()
 	{
-		navigator.enabled = false;
 		isAttacking = true;
 		animator.SetTrigger("Attack");
 		yield return new WaitForSeconds(0.4f);
@@ -144,7 +149,6 @@ public class Brute : Enemy
 		}
 
 		yield return new WaitForSeconds(0.3f);
-		navigator.enabled = killable.isAlive;
 		isAttacking = false;
 	}
 
