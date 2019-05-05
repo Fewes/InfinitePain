@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
 {
 	public static Player local;
 
+	public static int score;
+
 	// Inspector
 	public float		movementSpeed		= 10f;
 	public float		acceleration		= 10f;
@@ -17,6 +19,9 @@ public class Player : MonoBehaviour
 	public Transform	head;
 	public int			shotgunAmmo			= 32;
 	public Animator		foot;
+	public LayerMask	kickLayers;
+	public float		kickForce			= 5;
+	public Feet			feet;
 
 	[Header("UI")]
 	public Image		crosshair;
@@ -91,6 +96,8 @@ public class Player : MonoBehaviour
 		killable.OnDamage += Killable_OnDamage;
 		killable.OnHealthChanged += Killable_OnHealthChanged;
 
+		feet = GetComponentInChildren<Feet>();
+
 		headLightRotation = camera.transform.rotation;
 		foot.gameObject.SetActive(false);
     }
@@ -99,6 +106,8 @@ public class Player : MonoBehaviour
 	{
 		PoolManager.GetPooledObject("Effects", "BloodSplat", transform.position + Vector3.up * 1.5f);
 		KickCamera();
+		if (killable.isAlive)
+			AudioManager.PlaySoundEffect("PlayerHurt", transform.position);
 	}
 
 	private void Killable_OnDeath (object sender)
@@ -107,6 +116,7 @@ public class Player : MonoBehaviour
 		controller.center = Vector3.up * 1.3f;
 		weaponRig.gameObject.SetActive(false);
 		crosshair.enabled = false;
+		AudioManager.PlaySoundEffect("PlayerDie", transform.position);
 	}
 
 	private void Killable_OnHealthChanged(object sender)
@@ -134,7 +144,7 @@ public class Player : MonoBehaviour
 
 	void Kick ()
 	{
-		if (!isKicking)
+		if (!isKicking && killable.isAlive)
 			StartCoroutine(KickSequence());
 	}
 
@@ -144,7 +154,28 @@ public class Player : MonoBehaviour
 		KickCamera(0.025f);
 		foot.gameObject.SetActive(true);
 		foot.SetTrigger("Kick");
-		yield return new WaitForSeconds(0.4f);
+		yield return new WaitForSeconds(0.1f);
+
+		Ray ray = camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+		// Move ray origin back one meter
+		ray.origin -= ray.direction;
+        var hits = Physics.SphereCastAll(ray, 0.5f, 3f, kickLayers);
+		foreach (var hit in hits)
+		{
+            // Hit something
+			var enemy = hit.transform.GetComponentInChildren<Enemy>();
+			if (enemy)
+				enemy.Flinch();
+			var rb = hit.transform.GetComponentInChildren<Rigidbody>();
+			if (rb)
+				rb.velocity += ray.direction * kickForce;
+        }
+		if (hits.Length > 0)
+			AudioManager.PlaySoundEffect("KickHit", ray.origin + ray.direction * 2);
+		else
+			AudioManager.PlaySoundEffect("KickMiss", ray.origin + ray.direction * 2);
+
+		yield return new WaitForSeconds(0.3f);
 		foot.gameObject.SetActive(false);
 		isKicking = false;
 	}
@@ -190,6 +221,7 @@ public class Player : MonoBehaviour
 		camera.transform.localRotation = Quaternion.Lerp(Quaternion.identity, Random.rotation, amount);
 	}
 
+	Vector3 velocity;
 	void UpdateMovement ()
 	{
 		// Flattened, camera relative coordinate system
@@ -200,7 +232,21 @@ public class Player : MonoBehaviour
 		fwd.Normalize();
 		right.Normalize();
 
-		controller.SimpleMove((fwd * input.z + right * input.x) * movementSpeed);
+		var newVelocity = (fwd * input.z + right * input.x) * movementSpeed;
+		velocity.x = newVelocity.x;
+		velocity.z = newVelocity.z;
+		velocity.y += -9.82f * Time.deltaTime;
+
+		if (feet.grounded && Input.GetKeyDown(KeyCode.Space))
+			Jump();
+
+		controller.Move(velocity * Time.deltaTime);
+	}
+
+	void Jump ()
+	{
+		AudioManager.PlaySoundEffect("PlayerJump", transform.position);
+		velocity.y = 5f;
 	}
 
 	/*

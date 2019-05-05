@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
 	public bool alert;
 	protected Animator animator;
@@ -29,6 +29,9 @@ public class Enemy : MonoBehaviour
 		//if (alert)
 		//	transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Player.local.transform.position - transform.position, Vector3.up), Time.deltaTime * 3);
 	}
+
+	public abstract void Flinch ();
+	public abstract void Explode ();
 }
 
 public class Brute : Enemy
@@ -36,6 +39,13 @@ public class Brute : Enemy
 	float running = 0;
 	NavMeshAgent navigator;
 	CapsuleCollider collider;
+	Feet feet;
+
+	public AudioSource idleAudio;
+
+	public bool isAttacking { get; private set; }
+
+	bool navigatorDisabled = false;
 
     // Start is called before the first frame update
     new void Start ()
@@ -47,24 +57,43 @@ public class Brute : Enemy
 
 		navigator = GetComponent<NavMeshAgent>();
 		collider = GetComponent<CapsuleCollider>();
+		feet = GetComponent<Feet>();
+
+		isAttacking = false;
+		navigatorDisabled = false;
     }
 
 	private void Killable_OnDamage (float damage)
 	{
-		if (killable.isAlive && navigator.enabled)
+		Flinch();
+		PoolManager.GetPooledObject("Effects", "BloodSplat", transform.position + Vector3.up * 1.5f);
+	}
+
+	public override void Flinch ()
+	{
+		if (killable.isAlive)
 		{
 			StartCoroutine(DisableNavigator(0.5f));
 			animator.SetTrigger("Hurt");
 		}
-		rigidbody.velocity += Vector3.up * 0.1f;
+		rigidbody.velocity += Vector3.up * 0.2f;
+	}
+
+	public override void Explode ()
+	{
+		killable.Kill();
+		PoolManager.GetPooledObject("Effects", "BruteExplosion", transform.position + Vector3.up * 1.5f);
+		AudioManager.PlaySoundEffect("GoreExplosion", transform.position);
+		Destroy(gameObject);
+
+		Player.score += 2;
 	}
 
 	IEnumerator DisableNavigator (float duration)
 	{
-		navigator.enabled = false;
+		navigatorDisabled = true;
 		yield return new WaitForSeconds(duration);
-		if (killable.isAlive)
-			navigator.enabled = true;
+		navigatorDisabled = false;
 	}
 
 	private void Killable_OnDeath(object sender)
@@ -75,7 +104,10 @@ public class Brute : Enemy
 		collider.radius = 0.2f;
 		collider.height = 0.2f;
 		collider.center = Vector3.up * 0.2f;
+		AudioManager.PlaySoundEffect("BruteDeath", transform.position + Vector3.up * 1.7f);
+		idleAudio.Stop();
 
+		Player.score += 1;
 	}
 
 	// Update is called once per frame
@@ -83,18 +115,52 @@ public class Brute : Enemy
     {
         base.Update();
 
-		if (alert && killable.isAlive && navigator.enabled)
+		if (alert && killable.isAlive)
 		{
-			if (!navigator.isOnNavMesh)
+			if (!isAttacking && navigator.enabled)
 			{
-				Destroy(gameObject);
-				return;
+				if (!navigator.isOnNavMesh)
+				{
+					Destroy(gameObject);
+					return;
+				}
+
+				navigator.destination = Player.local.transform.position;
+
+				if (Vector3.Distance(transform.position, Player.local.transform.position) <= navigator.stoppingDistance)
+				{
+					StartCoroutine(AttackSequence());
+				}
 			}
-			navigator.destination = Player.local.transform.position;
+
+			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Player.local.transform.position - transform.position, Vector3.up), Time.deltaTime * 2);
 		}
+
+		navigator.enabled = !navigatorDisabled && killable.isAlive && !isAttacking && feet.grounded;
 
 		animator.SetFloat("Run", Mathf.Clamp01(navigator.velocity.magnitude));
     }
+
+	IEnumerator AttackSequence ()
+	{
+		isAttacking = true;
+		animator.SetTrigger("Attack");
+		yield return new WaitForSeconds(0.4f);
+
+		// Do damage
+		if (Vector3.Distance(Player.local.transform.position, transform.position) <= navigator.stoppingDistance + 0.5f)
+		{
+			Player.local.killable.Damage(15);
+			AudioManager.PlaySoundEffect("AxeHit", transform.position + Vector3.up * 1.5f);
+		}
+		else
+		{
+			AudioManager.PlaySoundEffect("AxeMiss", transform.position + Vector3.up * 1.5f);
+		}
+
+		yield return new WaitForSeconds(0.3f);
+		isAttacking = false;
+	}
 
 	private void FixedUpdate ()
 	{

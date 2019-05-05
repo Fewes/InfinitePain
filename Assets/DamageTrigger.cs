@@ -17,8 +17,16 @@ public class DamageTrigger : MonoBehaviour
 
 		bool isPlayer = killable == Player.local.killable;
 
-		if ((isPlayer && killPlayer) || (!isPlayer && killEnemies))
+		if (isPlayer && killPlayer)
 			killable.Kill();
+		else if (!isPlayer && killEnemies)
+		{
+			var enemy = killable.GetComponentInChildren<Enemy>();
+			if (enemy)
+				enemy.Explode();
+			else
+				killable.Kill();
+		}
 		else
 			killable.Damage(damage);
 
