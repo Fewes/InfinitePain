@@ -41,6 +41,8 @@ public class Brute : Enemy
 	CapsuleCollider collider;
 	Feet feet;
 
+	public AudioSource idleAudio;
+
 	public bool isAttacking { get; private set; }
 
 	bool navigatorDisabled = false;
@@ -79,8 +81,12 @@ public class Brute : Enemy
 
 	public override void Explode ()
 	{
+		killable.Kill();
 		PoolManager.GetPooledObject("Effects", "BruteExplosion", transform.position + Vector3.up * 1.5f);
+		AudioManager.PlaySoundEffect("GoreExplosion", transform.position);
 		Destroy(gameObject);
+
+		Player.score += 2;
 	}
 
 	IEnumerator DisableNavigator (float duration)
@@ -98,6 +104,10 @@ public class Brute : Enemy
 		collider.radius = 0.2f;
 		collider.height = 0.2f;
 		collider.center = Vector3.up * 0.2f;
+		AudioManager.PlaySoundEffect("BruteDeath", transform.position + Vector3.up * 1.7f);
+		idleAudio.Stop();
+
+		Player.score += 1;
 	}
 
 	// Update is called once per frame

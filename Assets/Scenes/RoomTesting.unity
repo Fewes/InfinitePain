@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 106843107}
   - component: {fileID: 106843108}
   - component: {fileID: 106843110}
+  - component: {fileID: 106843111}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -233,6 +234,20 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: Killable+KillableEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+--- !u!114 &106843111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106843106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80874031072af5b4990a0dfd2462787d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footstepVolume: 1
+  footstepDistance: 2
 --- !u!4 &158993723 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 5b254c8a7352fb2498a763e5b527a71f,
@@ -378,6 +393,21 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 60b07a7095e8d1e4b9b85f2bdca3c61d, type: 3}
     - {fileID: 8300000, guid: 08fbe8eb0e3364845b0f232cdb1225b5, type: 3}
     - {fileID: 8300000, guid: b3d2aadf5eb8b6d41a174d6d042c0220, type: 3}
+  - name: KickHit
+    clips:
+    - {fileID: 8300000, guid: 9f2329ce0a10baa46bd3ced12b19d6d7, type: 3}
+  - name: KickMiss
+    clips:
+    - {fileID: 8300000, guid: 92c679882a89dd94a8d3d8bd7829ebf6, type: 3}
+  - name: PlayerHurt
+    clips:
+    - {fileID: 8300000, guid: c645bba5d8aacb34ab376019806eee55, type: 3}
+  - name: PlayerDie
+    clips:
+    - {fileID: 8300000, guid: 89face3d9bdcf6548984b2d7cf51ab03, type: 3}
+  - name: GoreExplosion
+    clips:
+    - {fileID: 8300000, guid: 568b068c03fa02b4aa72b1203a54a831, type: 3}
 --- !u!4 &252682219
 Transform:
   m_ObjectHideFlags: 0

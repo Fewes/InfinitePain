@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
 {
 	public static Player local;
 
+	public static int score;
+
 	// Inspector
 	public float		movementSpeed		= 10f;
 	public float		acceleration		= 10f;
@@ -19,6 +21,7 @@ public class Player : MonoBehaviour
 	public Animator		foot;
 	public LayerMask	kickLayers;
 	public float		kickForce			= 5;
+	public Feet			feet;
 
 	[Header("UI")]
 	public Image		crosshair;
@@ -93,6 +96,8 @@ public class Player : MonoBehaviour
 		killable.OnDamage += Killable_OnDamage;
 		killable.OnHealthChanged += Killable_OnHealthChanged;
 
+		feet = GetComponentInChildren<Feet>();
+
 		headLightRotation = camera.transform.rotation;
 		foot.gameObject.SetActive(false);
     }
@@ -101,6 +106,8 @@ public class Player : MonoBehaviour
 	{
 		PoolManager.GetPooledObject("Effects", "BloodSplat", transform.position + Vector3.up * 1.5f);
 		KickCamera();
+		if (killable.isAlive)
+			AudioManager.PlaySoundEffect("PlayerHurt", transform.position);
 	}
 
 	private void Killable_OnDeath (object sender)
@@ -109,6 +116,7 @@ public class Player : MonoBehaviour
 		controller.center = Vector3.up * 1.3f;
 		weaponRig.gameObject.SetActive(false);
 		crosshair.enabled = false;
+		AudioManager.PlaySoundEffect("PlayerDie", transform.position);
 	}
 
 	private void Killable_OnHealthChanged(object sender)
@@ -213,6 +221,7 @@ public class Player : MonoBehaviour
 		camera.transform.localRotation = Quaternion.Lerp(Quaternion.identity, Random.rotation, amount);
 	}
 
+	Vector3 velocity;
 	void UpdateMovement ()
 	{
 		// Flattened, camera relative coordinate system
@@ -223,7 +232,21 @@ public class Player : MonoBehaviour
 		fwd.Normalize();
 		right.Normalize();
 
-		controller.SimpleMove((fwd * input.z + right * input.x) * movementSpeed);
+		var newVelocity = (fwd * input.z + right * input.x) * movementSpeed;
+		velocity.x = newVelocity.x;
+		velocity.z = newVelocity.z;
+		velocity.y += -9.82f * Time.deltaTime;
+
+		if (feet.grounded && Input.GetKeyDown(KeyCode.Space))
+			Jump();
+
+		controller.Move(velocity * Time.deltaTime);
+	}
+
+	void Jump ()
+	{
+		AudioManager.PlaySoundEffect("PlayerJump", transform.position);
+		velocity.y = 5f;
 	}
 
 	/*

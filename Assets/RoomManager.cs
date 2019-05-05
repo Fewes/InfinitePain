@@ -48,6 +48,7 @@ public class RoomManager : MonoBehaviour
 		previous = current;
 		current = next;
 		GenerateNext();
+		Player.score += 5;
 	}
 
 	void ClearStack ()
