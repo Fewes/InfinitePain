@@ -6,11 +6,25 @@ using UnityEngine.UI;
 public class ScoreScreen : MonoBehaviour
 {
     Text m_Text;
+    public GameObject restart;
 
-    void OnEnable()
+    void Player_OnDeath(object sender)
+    {
+        Debug.Log("Dead");
+        restart.SetActive(true);
+    }
+
+    // Start is called before the first frame update
+    void Start()
     {
         m_Text = GetComponent<Text>();
-        int score = 10;
+
+        Player.local.killable.OnDeath += Player_OnDeath;
+    }
+
+    void Update()
+    {
+        int score = Player.score;
         m_Text.text = "Score: " + score;
     }
 
