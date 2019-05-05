@@ -86,7 +86,7 @@ public class Brute : Enemy
 		AudioManager.PlaySoundEffect("GoreExplosion", transform.position);
 		Destroy(gameObject);
 
-		Player.score += 2;
+		Player.score += 4;
 	}
 
 	IEnumerator DisableNavigator (float duration)
@@ -107,7 +107,7 @@ public class Brute : Enemy
 		AudioManager.PlaySoundEffect("BruteDeath", transform.position + Vector3.up * 1.7f);
 		idleAudio.Stop();
 
-		Player.score += 1;
+		Player.score += 2;
 	}
 
 	// Update is called once per frame

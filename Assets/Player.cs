@@ -125,6 +125,8 @@ public class Player : MonoBehaviour
 
 		headLightRotation = camera.transform.rotation;
 		foot.gameObject.SetActive(false);
+
+		flash.SetColor("_Color", Color.black);
     }
 
 	private void Killable_OnDamage (float damage)
@@ -276,6 +278,7 @@ public class Player : MonoBehaviour
 	}
 
 	Vector3 velocity;
+	bool jumping = false;
 	void UpdateMovement ()
 	{
 		// Flattened, camera relative coordinate system
@@ -295,12 +298,23 @@ public class Player : MonoBehaviour
 			Jump();
 
 		controller.Move(velocity * Time.deltaTime);
+
+		if (feet.grounded && !jumping)
+			velocity.y = 0;
 	}
 
 	void Jump ()
 	{
+		StartCoroutine(JumpSequence());
+	}
+
+	IEnumerator JumpSequence ()
+	{
+		jumping = true;
 		AudioManager.PlaySoundEffect("PlayerJump", transform.position);
 		velocity.y = 5f;
+		yield return new WaitForSeconds(0.5f);
+		jumping = false;
 	}
 
 	/*
