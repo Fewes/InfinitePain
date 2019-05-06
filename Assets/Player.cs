@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
 	public float		kickForce			= 5;
 	public Feet			feet;
 	public Material		flash;
+	public Color		startFog;
+	public Color		endFog;
 
 	[Header("UI")]
 	public Image		crosshair;
@@ -168,6 +170,8 @@ public class Player : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.F))
 			Kick();
+
+		RenderSettings.fogColor = Color.Lerp(startFog, endFog, Mathf.Clamp01((float)score / 200));
     }
 
 	void Kick ()
